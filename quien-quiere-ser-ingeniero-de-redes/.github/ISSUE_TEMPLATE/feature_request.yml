@@ -1,0 +1,14 @@
+name: Solicitud de Feature
+description: Propón una mejora
+labels: [enhancement]
+body:
+  - type: textarea
+    id: necesidad
+    attributes:
+      label: Necesidad / Caso de uso
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta

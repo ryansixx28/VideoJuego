@@ -1,0 +1,34 @@
+# Node / Vite / React
+node_modules/
+dist/
+build/
+.vite/
+.env
+.env.*
+.DS_Store
+.idea/
+.vscode/
+coverage/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+
+# Android / Capacitor
+android/
+*.keystore
+*.jks
+# Gradle
+.gradle/
+/local.properties
+**/build/
+**/.gradle/
+**/.idea/
+captures/
+*.iml
+
+# Firebase export/import temp
+firebase-import/
+firebase-service-account.json

@@ -1,0 +1,19 @@
+name: Reporte de Bug
+description: Describe un error reproducible
+labels: [bug]
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Descripción
+      description: ¿Qué sucede y qué esperabas?
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para reproducir
+  - type: input
+    id: version
+    attributes:
+      label: Versión/commit
