@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "642374436041",
+    "project_id": "quiz-redes-fb118",
+    "storage_bucket": "quiz-redes-fb118.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642374436041:android:53f170434aac5dabfef918",
+        "android_client_info": {
+          "package_name": "com.brayam.quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642374436041-tfn0ef9nj485dhd9u61g7k5kdiaqbg78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEM3IOhlEiheFBfZb0S699xq1ecrITIHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642374436041-tfn0ef9nj485dhd9u61g7k5kdiaqbg78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

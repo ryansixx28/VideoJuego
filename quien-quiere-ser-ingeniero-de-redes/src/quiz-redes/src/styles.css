@@ -1,0 +1,283 @@
+:root { --c: #0ea5e9; --c2:#1c2b4a; --ok:#18c964; --bad:#ff5555; }
+* { box-sizing: border-box; }
+body { font-family: system-ui, Arial, sans-serif; margin: 0; background:#0b1220; color:#e5eef9; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.card { background: #111a2b; border: 1px solid #1e2a44; border-radius: 16px; padding: 20px; box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+.btn { cursor:pointer; border:none; border-radius: 12px; padding: 12px 16px; background: var(--c); color:white; font-weight:600; }
+.btn.secondary { background:#243b5a; }
+.grid { display:grid; gap:12px; }
+.badge { display:inline-block; padding:6px 10px; border-radius: 999px; background:#12223b; border:1px solid #1f3151; color:#9acbff; font-weight:600; }
+.header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+.title { font-size:28px; font-weight:800; margin:0; }
+.subtitle { opacity:.8; margin:0; }
+.option { background:#0f1a2d; border:1px solid #203659; border-radius:12px; padding:12px; cursor:pointer; transition:transform .1s ease, border-color .2s ease; }
+.option:hover { transform: translateY(-1px); }
+.option.correct { border-color:var(--ok); box-shadow:0 0 0 2px rgba(24,201,100,.25) inset; }
+.option.wrong { border-color:var(--bad); box-shadow:0 0 0 2px rgba(255,85,85,.25) inset; }
+.timer { font-variant-numeric: tabular-nums; font-weight:700; }
+
+/* ===== Estilo "¿Quién quiere ser millonario?" ===== */
+.millionaire { display:grid; grid-template-columns: 1fr 260px; gap:16px; }
+.qa-box { background: radial-gradient(100% 100% at 50% 0%, #0d1527 0%, #0a1120 100%); border:1px solid #1f3152; border-radius:18px; padding:16px; }
+.options { display:grid; grid-template-columns: 1fr; gap:10px; }
+.option.big { padding:16px 18px; font-size:16px; border-radius:999px; background:linear-gradient(180deg, #10203b 0%, #0b162d 100%); }
+.option.disabled { opacity:.35; pointer-events:none; }
+
+.lifelines { display:flex; gap:8px; flex-wrap:wrap; }
+.lifeline { background:#10203b; border:1px dashed #2a4a7a; color:#9acbff; padding:8px 12px; border-radius:999px; font-weight:700; cursor:pointer; position:relative; overflow:hidden; }
+.lifeline.used { opacity:.4; pointer-events:none; text-decoration: line-through; }
+
+.ladder { background:#0d1527; border:1px solid #203659; border-radius:16px; padding:12px; }
+.ladder h4 { margin:0 0 8px 0; font-size:14px; opacity:.85; }
+.ladder ul { list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+.step { display:flex; justify-content:space-between; padding:6px 10px; border-radius:8px; background:#0b162d; border:1px solid #1e2a44; opacity:.75; font-weight:600; }
+.step.active { background:#112545; color:#cfe6ff; opacity:1; border-color:#2d6cff; animation: glow 1200ms ease-out; }
+.step.done { opacity:1; }
+.step .pos { opacity:.8; }
+
+/* ===== Animaciones ===== */
+@keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.07)} 100%{transform:scale(1)} }
+@keyframes glow { 0%{ box-shadow: 0 0 0 0 rgba(45,108,255,.6) } 100%{ box-shadow: 0 0 0 14px rgba(45,108,255,0) } }
+@keyframes flashOk { 0%,100%{ background:linear-gradient(180deg,#103c2a 0%,#0d2f24 100%)} 50%{ background:linear-gradient(180deg,#0c5e3a 0%,#0b4a32 100%)} }
+@keyframes flashBad { 0%,100%{ background:linear-gradient(180deg,#3b1111 0%,#290d0d 100%)} 50%{ background:linear-gradient(180deg,#6b1818 0%,#4a1212 100%)} }
+@keyframes shake { 10%,90%{transform:translateX(-1px)} 20%,80%{transform:translateX(2px)} 30%,50%,70%{transform:translateX(-4px)} 40%,60%{transform:translateX(4px)} }
+
+/* Timer crítico */
+.badge.timer.danger { background:#2a1420; border-color:#5c1c31; color:#ffc9d7; animation:pulse .75s infinite; }
+
+/* Opciones con revelado */
+.option.correct.reveal { animation: flashOk 850ms ease-in-out; }
+.option.wrong.reveal { animation: flashBad 850ms ease-in-out; }
+.quiz-shake { animation: shake 450ms linear; }
+
+/* Ripple simple para comodines */
+.lifeline:active { transform:scale(.98); }
+
+/* ===== Fondo inmersivo ===== */
+body {
+  background: radial-gradient(1200px 900px at 50% -10%, #0b1630 0%, #0b1220 45%, #080f1c 100%);
+}
+
+/* Contenedor de las capas (detrás de todo) */
+.bg-immersive {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Auroras / blobs con blur + animación lenta */
+.bg-auroras {
+  position: absolute;
+  inset: -20%;
+  background:
+    conic-gradient(from 180deg at 30% 40%, rgba(14,165,233,.20), transparent 40%),
+    conic-gradient(from 0deg at 70% 65%, rgba(99,102,241,.18), transparent 50%),
+    radial-gradient(700px 400px at 85% 20%, rgba(56,189,248,.12), transparent 60%),
+    radial-gradient(600px 350px at 10% 90%, rgba(16,185,129,.10), transparent 60%);
+  filter: blur(60px) saturate(120%);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+/* Rejilla sutil con perspectiva (muy ligera) */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(900px) rotateX(60deg) translateY(-20%);
+  opacity: .25;
+  filter: blur(.3px);
+}
+
+/* Viñeta para cerrar bordes y dar profundidad */
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 260px rgba(0,0,0,.75), inset 0 0 80px rgba(0,0,0,.55);
+}
+
+/* Animaciones suaves */
+@keyframes drift {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(-2%, -1%, 0) scale(1.03); }
+  100% { transform: translate3d(2%, 1%, 0) scale(1.04); }
+}
+
+/* Opcional: que las tarjetas dejen “ver” el fondo */
+.card {
+  background: rgba(17,26,43,.72);
+  border: 1px solid #1e2a44;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+
+/* ===== Fondo tipo Datacenter (CSS puro) ===== */
+.bg-dc {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(1400px 900px at 50% -10%, #0b162b 0%, #0a1223 45%, #070f1c 100%);
+}
+
+/* Pasillo central (piso con leve reflejo) */
+.dc-aisle {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(18,34,59,0.0), rgba(18,34,59,0.12) 55%, rgba(18,34,59,0.28)),
+    radial-gradient(900px 360px at 50% 70%, rgba(30,144,255,0.08), transparent 70%);
+  filter: saturate(110%);
+}
+
+/* Racks laterales con perspectiva y división de paneles */
+.dc-racks {
+  position: absolute;
+  top: -6vh;
+  bottom: -6vh;
+  width: 42vw;
+  background:
+    /* líneas horizontales sutiles */
+    repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0 1px, transparent 1px 28px),
+    /* columnas/paneles */
+    repeating-linear-gradient(to right, #0e1b2f 0 90px, #0c1727 90px 92px),
+    /* sombra interna */
+    linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.0) 20%, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.35));
+  border: 1px solid #1a2a44;
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,0.55),
+    0 20px 60px rgba(0,0,0,0.45);
+  transform-origin: center;
+  filter: blur(0.15px);
+}
+
+.dc-racks.left  { left: -2vw;  transform: perspective(1000px) rotateY(22deg); }
+.dc-racks.right { right: -2vw; transform: perspective(1000px) rotateY(-22deg); }
+
+/* LEDs parpadeando en los racks (muy sutil para no distraer) */
+.dc-leds {
+  position: absolute;
+  inset: 0;
+  opacity: .45;
+  background-image:
+    /* matriz de pequeños leds azul */
+    radial-gradient(circle at 12px 10px, rgba(56,189,248,0.85) 1.5px, transparent 2px),
+    radial-gradient(circle at 48px 24px, rgba(14,165,233,0.9) 1.6px, transparent 2px),
+    radial-gradient(circle at 76px 34px, rgba(56,189,248,0.8) 1.5px, transparent 2px),
+    /* algún led ámbar esporádico */
+    radial-gradient(circle at 28px 18px, rgba(252,211,77,0.9) 1.4px, transparent 2px);
+  background-size: 90px 56px, 90px 56px, 90px 56px, 90px 56px;
+  background-position:
+    left 12vw top 10vh,
+    right 10vw top 26vh,
+    left 8vw  top 42vh,
+    right 14vw top 58vh;
+  animation: ledsBlink 2.6s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes ledsBlink {
+  0%, 24%   { opacity: .28 }
+  25%, 49%  { opacity: .52 }
+  50%, 74%  { opacity: .35 }
+  75%, 100% { opacity: .5 }
+}
+
+/* Viñeta para profundidad y cerrar bordes */
+.dc-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 260px rgba(0,0,0,.75), inset 0 0 120px rgba(0,0,0,.6);
+}
+
+/* Las tarjetas dejan pasar un poco el fondo (glass sutil) */
+.card {
+  background: rgba(17,26,43,.78);
+  border: 1px solid #1e2a44;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Mobile: reduce perspectiva para legibilidad */
+@media (max-width: 900px) {
+  .dc-racks.left  { transform: perspective(1000px) rotateY(14deg);  width: 48vw; left: -5vw; }
+  .dc-racks.right { transform: perspective(1000px) rotateY(-14deg); width: 48vw; right: -5vw; }
+  .dc-leds { opacity: .38; }
+}
+
+/* ===== Láser 10GbE + Ventiladores en Datacenter ===== */
+
+/* Láser 10GbE: barra con glow que cruza el pasillo */
+.bg-dc::before {
+  content: "";
+  position: absolute;
+  top: 52%;
+  left: -20%;
+  width: 140%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(56,189,248,.20) 10%,
+    rgba(56,189,248,.95) 35%,
+    rgba(56,189,248,.20) 60%,
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(56,189,248,.65), 0 0 24px rgba(56,189,248,.35);
+  filter: blur(.2px);
+  opacity: .85;
+  animation: laserSweep 5.4s ease-in-out infinite;
+}
+@keyframes laserSweep {
+  0%   { transform: translateX(-12%) skewX(0deg);  opacity:.55 }
+  50%  { transform: translateX(12%)  skewX(2deg);  opacity:.95 }
+  100% { transform: translateX(-12%) skewX(0deg);  opacity:.55 }
+}
+
+/* Ventiladores: se “pintan” sobre cada pared de racks con pseudo-elementos */
+.dc-racks.left::before,
+.dc-racks.right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .45;
+  mix-blend-mode: screen;
+  background:
+    /* 1er fan */
+    radial-gradient(closest-side, rgba(14,165,233,.75), rgba(14,165,233,.04) 66%),
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,.08) 0 6deg, rgba(255,255,255,0) 6deg 18deg),
+    /* 2do fan */
+    radial-gradient(closest-side, rgba(14,165,233,.75), rgba(14,165,233,.04) 66%),
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,.08) 0 6deg, rgba(255,255,255,0) 6deg 18deg),
+    /* 3er fan */
+    radial-gradient(closest-side, rgba(14,165,233,.75), rgba(14,165,233,.04) 66%),
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,.08) 0 6deg, rgba(255,255,255,0) 6deg 18deg);
+  background-repeat: no-repeat;
+  background-size: 26px 26px, 26px 26px, 26px 26px, 26px 26px, 26px 26px, 26px 26px;
+}
+
+/* Posiciones y animaciones separadas por lado */
+.dc-racks.left::before {
+  background-position:
+    12vw 18vh, 12vw 18vh,
+    9vw  42vh, 9vw  42vh,
+    14vw 66vh, 14vw 66vh;
+  animation: spinSheetLeft 10s linear infinite, floatSheet 6s ease-in-out infinite;
+}
+.dc-racks.right::before {
+  background-position:
+    calc(100% - 10vw) 24vh, calc(100% - 10vw) 24vh,
+    calc(100% - 13vw) 48vh, calc(100% - 13vw) 48vh,
+    calc(100% - 8vw)  72vh, calc(100% - 8vw)  72vh;
+  animation: spinSheetRight 9s linear infinite, floatSheet 5.5s ease-in-out infinite;
+}
+@keyframes spinSheetLeft  { to { transform: rotate(360deg) } }
+@keyframes spinSheetRight { to { transform: rotate(-360deg) } }
+@keyframes floatSheet     { 0%,100% { transform: translateY(-2px) } 50% { transform: translateY(2px) } }
